@@ -8,6 +8,8 @@ import Glass from '@/components/ui/Glass';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     company: '',
@@ -18,13 +20,31 @@ export default function ContactPage() {
     agreePrivacy: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
     if (!formData.agreePrivacy) {
       alert('Vui lòng đồng ý với Chính sách bảo mật trước khi gửi thông tin.');
       return;
     }
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setSubmitError(payload.error || 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại sau.');
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setSubmitError('Không thể kết nối máy chủ. Vui lòng thử lại sau.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,6 +98,7 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Họ và tên */}
                     <div className="space-y-2">
@@ -211,11 +232,13 @@ export default function ContactPage() {
                   {/* Submit Button */}
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     className="w-full py-4 rounded-full bg-[#153E35] text-white text-sm font-semibold hover:bg-[#0E2923] transition-all shadow-lg active:scale-98 flex items-center justify-center gap-2"
                   >
-                    <span>Gửi yêu cầu tư vấn chính thức</span>
+                    <span>{isSubmitting ? 'Đang gửi yêu cầu…' : 'Gửi yêu cầu tư vấn chính thức'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
+                  {submitError && <p role="alert" className="text-sm text-red-700">{submitError}</p>}
                 </form>
               )}
             </div>

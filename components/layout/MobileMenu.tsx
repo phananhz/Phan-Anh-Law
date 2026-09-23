@@ -157,6 +157,14 @@ export default function MobileMenu({ isOpen, onClose, onOpenSearch }: MobileMenu
         </Link>
 
         <Link
+          href="/news"
+          onClick={onClose}
+          className="flex items-center justify-between py-3.5 text-lg font-serif text-stone-900 font-medium border-b border-stone-200/50"
+        >
+          <span>Tin tức</span>
+          <ArrowRight className="w-4 h-4 text-stone-400" />
+        </Link>
+        <Link
           href="/about"
           onClick={onClose}
           className="flex items-center justify-between py-3.5 text-lg font-serif text-stone-900 font-medium border-b border-stone-200/50"

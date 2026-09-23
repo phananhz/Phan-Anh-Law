@@ -6,7 +6,7 @@ import { offices } from '@/data/navigation';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#101312] text-white pt-20 pb-12 border-t border-white/10">
+    <footer data-nav-theme="dark" className="bg-[#101312] text-white pt-20 pb-12 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Top Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-white/10">

@@ -109,7 +109,7 @@ export default function AboutPage() {
         </section>
 
         {/* Section 3: Giá trị cốt lõi */}
-        <section className="p-8 sm:p-14 rounded-3xl bg-[#101312] text-white">
+        <section data-nav-theme="dark" className="p-8 sm:p-14 rounded-3xl bg-[#101312] text-white">
           <div className="max-w-3xl mb-12">
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-sage-brand">
               GIÁ TRỊ CỐT LÕI
@@ -253,7 +253,7 @@ export default function AboutPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="p-8 sm:p-14 rounded-3xl bg-[#153E35] text-white flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
+        <section data-nav-theme="dark" className="p-8 sm:p-14 rounded-3xl bg-[#153E35] text-white flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
           <div>
             <h2 className="font-serif text-3xl sm:text-4xl">
               Sẵn sàng cùng chúng tôi kiến tạo giải pháp?

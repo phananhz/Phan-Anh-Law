@@ -9,7 +9,7 @@ export default function FeaturedInsight() {
   const secondaryInsights = insights.filter((i) => i.id !== featuredArticle.id).slice(0, 3);
 
   return (
-    <section className="py-24 sm:py-32 px-6 sm:px-8 bg-[#101312] text-white overflow-hidden">
+    <section data-nav-theme="dark" className="py-24 sm:py-32 px-6 sm:px-8 bg-[#101312] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between pb-12 sm:pb-16 border-b border-white/10 gap-6">

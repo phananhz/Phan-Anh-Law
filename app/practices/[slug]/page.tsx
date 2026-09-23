@@ -219,7 +219,7 @@ export default async function PracticeDetailPage({ params }: PracticePageProps) 
 
         {/* Section: Liên hệ tư vấn trực tiếp */}
         <section className="py-16">
-          <div className="p-8 sm:p-12 rounded-3xl bg-[#153E35] text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div data-nav-theme="dark" className="p-8 sm:p-12 rounded-3xl bg-[#153E35] text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="max-w-2xl space-y-2">
               <span className="text-xs uppercase tracking-widest text-sage-brand font-semibold">
                 TƯ VẤN TRỰC TIẾP

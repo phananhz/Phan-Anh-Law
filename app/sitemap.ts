@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { practices } from '@/data/practices';
 import { people } from '@/data/people';
 import { insights } from '@/data/insights';
+import { newsArticles } from '@/data/news';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://phananhlaw.vn';
@@ -44,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: baseUrl + '/news',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
   ];
 
   // Dynamic practices routes
@@ -70,5 +77,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...practiceRoutes, ...peopleRoutes, ...insightRoutes];
+  const newsRoutes: MetadataRoute.Sitemap = newsArticles.map((article) => ({
+    url: baseUrl + '/news/' + article.slug,
+    lastModified: new Date(article.publishDate),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }));
+
+  return [...staticRoutes, ...practiceRoutes, ...peopleRoutes, ...insightRoutes, ...newsRoutes];
 }

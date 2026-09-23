@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Newsreader, Inter } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import SiteChrome from '@/components/layout/SiteChrome';
 
 const newsreader = Newsreader({
   subsets: ['latin', 'vietnamese'],
@@ -113,9 +112,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="font-sans antialiased bg-[#F4F3EF] text-[#111111] selection:bg-[#153E35] selection:text-white min-h-screen flex flex-col justify-between"
       >
-        <Header />
-        <div className="flex-1">{children}</div>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
