@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { newsArticles, type NewsArticle } from '@/data/news';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabasePublicClient } from '@/lib/supabase/public';
 import { normalizeArticleDocument } from '@/lib/news-content';
 
 type DatabaseArticle = {
@@ -44,7 +44,7 @@ function toNewsArticle(row: DatabaseArticle, coverImageUrl?: string): NewsArticl
 }
 
 export async function getPublishedNews(): Promise<NewsArticle[]> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   if (!supabase) return newsArticles;
 
   const { data, error } = await supabase

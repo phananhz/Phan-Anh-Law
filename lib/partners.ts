@@ -1,10 +1,10 @@
 import 'server-only';
 
 import { partners, type Partner } from '@/data/partners';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabasePublicClient } from '@/lib/supabase/public';
 
 export async function getActivePartners(): Promise<Partner[]> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   if (!supabase) return partners;
 
   const { data, error } = await supabase
