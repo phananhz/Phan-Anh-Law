@@ -27,6 +27,10 @@ export default function ContactPage() {
       alert('Vui lòng đồng ý với Chính sách bảo mật trước khi gửi thông tin.');
       return;
     }
+    if (formData.message.trim().length < 20) {
+      setSubmitError('Vui lòng mô tả yêu cầu tư vấn bằng ít nhất 20 ký tự.');
+      return;
+    }
     setIsSubmitting(true);
     try {
       const response = await fetch('/api/contact', {
@@ -108,6 +112,8 @@ export default function ContactPage() {
                       <input
                         type="text"
                         required
+                        minLength={2}
+                        maxLength={120}
                         value={formData.fullName}
                         onChange={(e) =>
                           setFormData({ ...formData, fullName: e.target.value })
@@ -125,6 +131,8 @@ export default function ContactPage() {
                       <input
                         type="text"
                         required
+                        minLength={2}
+                        maxLength={160}
                         value={formData.company}
                         onChange={(e) =>
                           setFormData({ ...formData, company: e.target.value })
@@ -144,6 +152,7 @@ export default function ContactPage() {
                       <input
                         type="email"
                         required
+                        maxLength={180}
                         value={formData.email}
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
@@ -161,6 +170,8 @@ export default function ContactPage() {
                       <input
                         type="tel"
                         required
+                        minLength={7}
+                        maxLength={40}
                         value={formData.phone}
                         onChange={(e) =>
                           setFormData({ ...formData, phone: e.target.value })
@@ -199,13 +210,18 @@ export default function ContactPage() {
                     <textarea
                       rows={5}
                       required
+                      minLength={20}
+                      maxLength={5000}
+                      aria-describedby="message-guidance"
                       value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, message: e.target.value });
+                        setSubmitError('');
+                      }}
                       placeholder="Mô tả ngắn gọn về tình trạng hiện tại của doanh nghiệp, mục tiêu dự kiến và các mốc thời gian quan trọng..."
                       className="w-full px-4 py-3 rounded-xl bg-paper-subtle border border-stone-200 text-sm text-stone-900 focus:outline-none focus:border-emerald-brand transition-colors leading-relaxed"
                     />
+                    <p id="message-guidance" className="text-xs text-stone-500">Ít nhất 20 ký tự, tối đa 5.000 ký tự.</p>
                   </div>
 
                   {/* Checkbox Bảo mật */}

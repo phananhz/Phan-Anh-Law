@@ -40,7 +40,19 @@ export async function POST(request: Request) {
   const input = await request.json().catch(() => null);
   const parsed = contactSchema.safeParse(input);
   if (parsed.success && parsed.data.website?.trim()) return NextResponse.json({ ok: true });
-  if (!parsed.success) return NextResponse.json({ error: 'Vui lòng kiểm tra lại thông tin đã nhập.' }, { status: 400 });
+  if (!parsed.success) {
+    const field = String(parsed.error.issues[0]?.path[0] || '');
+    const fieldMessages: Record<string, string> = {
+      fullName: 'Họ và tên cần có từ 2 đến 120 ký tự.',
+      company: 'Tên công ty cần có từ 2 đến 160 ký tự.',
+      email: 'Vui lòng nhập email hợp lệ.',
+      phone: 'Số điện thoại cần có từ 7 đến 40 ký tự.',
+      practice: 'Vui lòng chọn lĩnh vực tư vấn.',
+      message: 'Vui lòng mô tả yêu cầu tư vấn bằng ít nhất 20 ký tự (tối đa 5.000 ký tự).',
+      agreePrivacy: 'Vui lòng đồng ý với chính sách bảo mật.',
+    };
+    return NextResponse.json({ error: fieldMessages[field] || 'Vui lòng kiểm tra lại thông tin đã nhập.' }, { status: 400 });
+  }
   if (isRateLimited(rateLimitKey(request, parsed.data.email))) {
     return NextResponse.json({ error: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.' }, { status: 429 });
   }
