@@ -43,3 +43,15 @@ export async function getCurrentAdmin(): Promise<CurrentAdmin | null> {
 export function canEditNews(role: AdminRole) {
   return role === 'editor' || role === 'super_admin';
 }
+
+export function canManageMessages(role: AdminRole) {
+  return role === 'editor' || role === 'super_admin';
+}
+
+export function canManagePartners(role: AdminRole) {
+  return role === 'editor' || role === 'super_admin';
+}
+
+export function canDeleteContent(role: AdminRole) {
+  return role === 'super_admin';
+}

@@ -80,7 +80,7 @@ export default function RichTextEditor({
     immediatelyRender: false,
     content: value,
     extensions: [
-      StarterKit.configure({ heading: { levels: [2, 3] } }),
+      StarterKit.configure({ heading: { levels: [2, 3] }, link: false, underline: false }),
       Image.configure({ inline: false, allowBase64: false }),
       Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
       TextStyle,
@@ -116,8 +116,8 @@ export default function RichTextEditor({
       onStatus?.('Chỉ nhận ảnh PNG, JPEG, WebP hoặc AVIF.');
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      onStatus?.('Ảnh phải nhỏ hơn 5 MB.');
+    if (file.size > 4 * 1024 * 1024) {
+      onStatus?.('Ảnh phải nhỏ hơn 4 MB.');
       return;
     }
 
@@ -191,6 +191,7 @@ export default function RichTextEditor({
         <ToolbarButton label="Nghiêng" active={activeEditor.isActive('italic')} onClick={() => activeEditor.chain().focus().toggleItalic().run()}><Italic className="h-4 w-4" /></ToolbarButton>
         <ToolbarButton label="Gạch chân" active={activeEditor.isActive('underline')} onClick={() => activeEditor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="h-4 w-4" /></ToolbarButton>
         <ToolbarButton label="Gạch ngang" active={activeEditor.isActive('strike')} onClick={() => activeEditor.chain().focus().toggleStrike().run()}><Strikethrough className="h-4 w-4" /></ToolbarButton>
+        <ToolbarButton label="Mã code" active={activeEditor.isActive('code')} onClick={() => activeEditor.chain().focus().toggleCode().run()}><Code className="h-4 w-4" /></ToolbarButton>
         <ToolbarButton label="Danh sách" active={activeEditor.isActive('bulletList')} onClick={() => activeEditor.chain().focus().toggleBulletList().run()}><List className="h-4 w-4" /></ToolbarButton>
         <ToolbarButton label="Danh sách số" active={activeEditor.isActive('orderedList')} onClick={() => activeEditor.chain().focus().toggleOrderedList().run()}><ListOrdered className="h-4 w-4" /></ToolbarButton>
         <ToolbarButton label="Trích dẫn" active={activeEditor.isActive('blockquote')} onClick={() => activeEditor.chain().focus().toggleBlockquote().run()}><Quote className="h-4 w-4" /></ToolbarButton>

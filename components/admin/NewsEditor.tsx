@@ -56,43 +56,46 @@ export function NewsEditor({ initialArticle }: { initialArticle?: InitialArticle
 
     const nextStatus = forceStatus || status;
     const endpoint = initialArticle?.id ? '/api/admin/news/' + initialArticle.id : '/api/admin/news';
-    const response = await fetch(endpoint, {
-      method: initialArticle?.id ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        slug,
-        excerpt,
-        body,
-        category,
-        status: nextStatus,
-        coverImagePath: coverImagePath || null,
-        coverImageAlt,
-      }),
-    });
-    const payload = await response.json().catch(() => ({}));
 
-    if (!response.ok) {
-      setMessage(payload.error || 'Không thể lưu bài viết.');
+    try {
+      const response = await fetch(endpoint, {
+        method: initialArticle?.id ? 'PATCH' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          slug,
+          excerpt,
+          body,
+          category,
+          status: nextStatus,
+          coverImagePath: coverImagePath || null,
+          coverImageAlt,
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Không thể lưu bài viết.');
+      }
+
+      setDirty(false);
+      setMessage(nextStatus === 'published' ? 'Đã xuất bản bài viết.' : 'Đã lưu bản nháp.');
+      const id = initialArticle?.id || payload.id;
+      if (nextStatus === 'published') router.push('/admin/news');
+      else if (id && !initialArticle?.id) router.push('/admin/news/' + id + '/edit');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Không thể lưu bài viết.');
+    } finally {
       setSaving(false);
-      return;
     }
-
-    setDirty(false);
-    setMessage(nextStatus === 'published' ? 'Đã xuất bản bài viết.' : 'Đã lưu bản nháp.');
-    const id = initialArticle?.id || payload.id;
-    if (nextStatus === 'published') router.push('/admin/news');
-    else if (id && !initialArticle?.id) router.push('/admin/news/' + id + '/edit');
-    setSaving(false);
   }
-
   async function handleCover(file: File) {
     if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
       setMessage('Chỉ nhận ảnh PNG, JPEG, WebP hoặc AVIF.');
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage('Ảnh phải nhỏ hơn 5 MB.');
+    if (file.size > 4 * 1024 * 1024) {
+      setMessage('Ảnh phải nhỏ hơn 4 MB.');
       return;
     }
 

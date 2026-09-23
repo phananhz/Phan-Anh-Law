@@ -9,6 +9,7 @@ function renderMarks(node: JSONContent, child: ReactNode) {
     if (mark.type === 'italic') return <em>{content}</em>;
     if (mark.type === 'underline') return <u>{content}</u>;
     if (mark.type === 'strike') return <s>{content}</s>;
+    if (mark.type === 'code') return <code>{content}</code>;
     if (mark.type === 'link') {
       return (
         <a href={attrs.href} target="_blank" rel="noreferrer">
@@ -39,16 +40,19 @@ function renderNode(node: JSONContent, key: string): ReactNode {
   }
 
   const children = (node.content || []).map((child, index) => renderNode(child, key + '-' + index));
+  const rawAlign = (node.attrs as { textAlign?: unknown } | undefined)?.textAlign;
+  const textAlign = typeof rawAlign === 'string' && ['left', 'center', 'right', 'justify'].includes(rawAlign) ? rawAlign as CSSProperties['textAlign'] : undefined;
+  const style = textAlign ? { textAlign } : undefined;
 
   if (node.type === 'heading') {
     const level = (node.attrs as { level?: number } | undefined)?.level === 3 ? 3 : 2;
-    return level === 3 ? <h3 key={key}>{children}</h3> : <h2 key={key}>{children}</h2>;
+    return level === 3 ? <h3 key={key} style={style}>{children}</h3> : <h2 key={key} style={style}>{children}</h2>;
   }
   if (node.type === 'bulletList') return <ul key={key}>{children}</ul>;
   if (node.type === 'orderedList') return <ol key={key}>{children}</ol>;
   if (node.type === 'listItem') return <li key={key}>{children}</li>;
   if (node.type === 'blockquote') return <blockquote key={key}>{children}</blockquote>;
-  return <p key={key}>{children}</p>;
+  return <p key={key} style={style}>{children}</p>;
 }
 
 export default function ArticleContent({ body }: { body: unknown }) {

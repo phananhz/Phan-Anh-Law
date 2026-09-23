@@ -28,8 +28,8 @@ export async function POST(request: Request) {
   if (!extension) {
     return NextResponse.json({ error: 'Chỉ nhận ảnh JPEG, PNG, WebP hoặc AVIF.' }, { status: 400 });
   }
-  if (file.size <= 0 || file.size > 5 * 1024 * 1024) {
-    return NextResponse.json({ error: 'Ảnh phải lớn hơn 0 và nhỏ hơn 5 MB.' }, { status: 400 });
+  if (file.size <= 0 || file.size > 4 * 1024 * 1024) {
+    return NextResponse.json({ error: 'Ảnh phải lớn hơn 0 và nhỏ hơn 4 MB.' }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();

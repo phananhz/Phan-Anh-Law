@@ -21,7 +21,9 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
+  // Middleware refreshes/verifies the cookie session.
+  // The admin layout calls getUser() and checks admin_profiles.
+  await supabase.auth.getClaims();
   response.headers.set('Cache-Control', 'private, no-store');
   return response;
 }

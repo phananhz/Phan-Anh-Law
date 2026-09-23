@@ -57,6 +57,11 @@ create table if not exists public.partners (
   created_at timestamptz not null default now()
 );
 
+create index if not exists contact_messages_created_at_idx on public.contact_messages (created_at desc);
+create index if not exists contact_messages_status_created_at_idx on public.contact_messages (status, created_at desc);
+create index if not exists articles_kind_status_published_at_idx on public.articles (content_kind, status, published_at desc);
+create index if not exists articles_kind_updated_at_idx on public.articles (content_kind, updated_at desc);
+create index if not exists partners_active_sort_name_idx on public.partners (is_active, sort_order, name);
 alter table public.admin_profiles enable row level security;
 alter table public.contact_messages enable row level security;
 alter table public.articles enable row level security;
@@ -81,12 +86,12 @@ create policy "editors manage articles" on public.articles for all to authentica
 drop policy if exists "public reads active partners" on public.partners;
 create policy "public reads active partners" on public.partners for select to anon, authenticated using (is_active = true);
 drop policy if exists "admins manage partners" on public.partners;
-create policy "admins manage partners" on public.partners for all to authenticated using (public.is_admin()) with check (public.is_admin());
+create policy "admins manage partners" on public.partners for all to authenticated using (public.can_edit_content()) with check (public.can_edit_content());
 
 drop policy if exists "admins read messages" on public.contact_messages;
 create policy "admins read messages" on public.contact_messages for select to authenticated using (public.is_admin());
 drop policy if exists "admins update messages" on public.contact_messages;
-create policy "admins update messages" on public.contact_messages for update to authenticated using (public.is_admin()) with check (public.is_admin());
+create policy "admins update messages" on public.contact_messages for update to authenticated using (public.can_edit_content()) with check (public.can_edit_content());
 
 drop policy if exists "public submits messages" on public.contact_messages;
 create policy "public submits messages" on public.contact_messages for insert to anon, authenticated with check (length(full_name) between 2 and 120 and length(company) between 2 and 160 and length(message) between 20 and 5000);

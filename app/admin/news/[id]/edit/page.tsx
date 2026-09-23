@@ -21,10 +21,16 @@ export default async function EditNewsPage({ params }: { params: Promise<{ id: s
   const { id } = await params;
   const supabase = await createSupabaseServerClient();
   const result = supabase
-    ? await supabase.from('articles').select('id, title, slug, excerpt, body_json, category, status, cover_image_path, cover_image_alt').eq('id', id).maybeSingle()
-    : { data: null };
-  const databaseArticle = result.data as DatabaseArticle | null;
-  const fallbackArticle = newsArticles.find((item) => item.id === id);
+    ? await supabase
+        .from('articles')
+        .select('id, title, slug, excerpt, body_json, category, status, cover_image_path, cover_image_alt')
+        .eq('id', id)
+        .maybeSingle()
+    : null;
+
+  if (result?.error) throw new Error('Không thể tải bài viết.');
+  const databaseArticle = (result?.data || null) as DatabaseArticle | null;
+  const fallbackArticle = !supabase ? newsArticles.find((item) => item.id === id) : null;
   if (!databaseArticle && !fallbackArticle) notFound();
 
   const coverImageUrl = databaseArticle?.cover_image_path && supabase
@@ -61,8 +67,14 @@ export default async function EditNewsPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
-      <Link href="/admin/news" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-brand"><ArrowLeft className="h-4 w-4" />Quay lại Tin tức</Link>
-      <div className="mb-10 mt-8"><div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-brand">CONTENT / EDIT</div><h1 className="mt-3 font-serif text-5xl tracking-tight text-stone-900">Chỉnh sửa bài viết</h1></div>
+      <Link href="/admin/news" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-brand">
+        <ArrowLeft className="h-4 w-4" />
+        Quay lại Tin tức
+      </Link>
+      <div className="mb-10 mt-8">
+        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-brand">CONTENT / EDIT</div>
+        <h1 className="mt-3 font-serif text-5xl tracking-tight text-stone-900">Chỉnh sửa bài viết</h1>
+      </div>
       <NewsEditor initialArticle={initialArticle} />
     </div>
   );

@@ -4,15 +4,19 @@ export type Partner = {
   shortName: string;
   descriptor: string;
   website?: string;
+  logoUrl?: string;
+  logoAlt?: string;
+  sortOrder?: number;
+  isActive?: boolean;
 };
 
-/** Fallback partner marks shown before the Supabase partners table is seeded. */
+/** Fallback only for local preview before the Supabase table is configured. */
 export const partners: Partner[] = [
-  { id: 'sunshine', name: 'Sunshine Group', shortName: 'SG', descriptor: 'Property & Investment' },
-  { id: 'jnc', name: 'JNC Group', shortName: 'JNC', descriptor: 'Infrastructure & Development' },
-  { id: 'mik', name: 'MIK Group', shortName: 'MIK', descriptor: 'Real Estate & Hospitality' },
-  { id: 'tl', name: 'TL Group', shortName: 'TL', descriptor: 'Business Solutions' },
-  { id: 'hung-hai', name: 'Hung Hai Group', shortName: 'HH', descriptor: 'Manufacturing & Trade' },
-  { id: 'northstar', name: 'Northstar Capital', shortName: 'NC', descriptor: 'Investment Advisory' },
-  { id: 'viet-bridge', name: 'Viet Bridge', shortName: 'VB', descriptor: 'Cross-border Business' },
+  { id: 'sunshine', name: 'Sunshine Group', shortName: 'SG', descriptor: 'Property & Investment', sortOrder: 10, isActive: true },
+  { id: 'jnc', name: 'JNC Group', shortName: 'JNC', descriptor: 'Infrastructure & Development', sortOrder: 20, isActive: true },
+  { id: 'mik', name: 'MIK Group', shortName: 'MIK', descriptor: 'Real Estate & Hospitality', sortOrder: 30, isActive: true },
+  { id: 'tl', name: 'TL Group', shortName: 'TL', descriptor: 'Business Solutions', sortOrder: 40, isActive: true },
+  { id: 'hung-hai', name: 'Hung Hai Group', shortName: 'HH', descriptor: 'Manufacturing & Trade', sortOrder: 50, isActive: true },
+  { id: 'northstar', name: 'Northstar Capital', shortName: 'NC', descriptor: 'Investment Advisory', sortOrder: 60, isActive: true },
+  { id: 'viet-bridge', name: 'Viet Bridge', shortName: 'VB', descriptor: 'Cross-border Business', sortOrder: 70, isActive: true },
 ];

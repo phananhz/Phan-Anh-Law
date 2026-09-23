@@ -14,8 +14,9 @@ const allowedNodes = new Set([
   'image',
 ]);
 
-const allowedMarks = new Set(['bold', 'italic', 'underline', 'strike', 'link', 'textStyle']);
+const allowedMarks = new Set(['bold', 'italic', 'underline', 'strike', 'code', 'link', 'textStyle']);
 const allowedFonts = new Set(['Newsreader', 'Inter', 'Georgia', 'system-ui']);
+const allowedAlignments = new Set(['left', 'center', 'right', 'justify']);
 const hexColor = /^#[0-9a-f]{6}$/i;
 const fontSize = /^(?:12|14|16|18|20|24|30|36|48)px$/;
 
@@ -62,9 +63,9 @@ function isAllowedImage(value: unknown) {
 }
 
 function isSafeStyle(attrs: Record<string, unknown>) {
-  if (attrs.color !== undefined && (typeof attrs.color !== 'string' || !hexColor.test(attrs.color))) return false;
-  if (attrs.fontFamily !== undefined && (typeof attrs.fontFamily !== 'string' || !allowedFonts.has(attrs.fontFamily))) return false;
-  if (attrs.fontSize !== undefined && (typeof attrs.fontSize !== 'string' || !fontSize.test(attrs.fontSize))) return false;
+  if (attrs.color !== undefined && attrs.color !== null && (typeof attrs.color !== 'string' || !hexColor.test(attrs.color))) return false;
+  if (attrs.fontFamily !== undefined && attrs.fontFamily !== null && (typeof attrs.fontFamily !== 'string' || !allowedFonts.has(attrs.fontFamily))) return false;
+  if (attrs.fontSize !== undefined && attrs.fontSize !== null && (typeof attrs.fontSize !== 'string' || !fontSize.test(attrs.fontSize))) return false;
   return true;
 }
 
@@ -84,6 +85,11 @@ export function isSafeArticleDocument(value: unknown) {
     if (current.type === 'heading') {
       const level = (current.attrs as { level?: unknown } | undefined)?.level;
       if (level !== 2 && level !== 3) return false;
+    }
+
+    if (current.type === 'paragraph' || current.type === 'heading') {
+      const textAlign = (current.attrs as { textAlign?: unknown } | undefined)?.textAlign;
+      if (textAlign !== undefined && textAlign !== null && (typeof textAlign !== 'string' || !allowedAlignments.has(textAlign))) return false;
     }
 
     if (current.type === 'image') {
