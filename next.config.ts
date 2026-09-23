@@ -2,6 +2,12 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Vercel's Supabase integration exposes SUPABASE_URL without the public prefix.
+  // The project URL is public and must be available to the browser at build time.
+  env: {
+    NEXT_PUBLIC_SUPABASE_URL:
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '',
+  },
   images: {
     domains: ['images.unsplash.com'],
     remotePatterns: [
