@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { supabasePublishableKey, supabaseUrl } from '@/lib/config';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = supabaseUrl;
+  const key = supabasePublishableKey;
 
   if (!url || !key || (!request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/preview'))) return response;
 

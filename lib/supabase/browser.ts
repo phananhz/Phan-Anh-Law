@@ -1,13 +1,13 @@
 'use client';
 
 import { createBrowserClient } from '@supabase/ssr';
-import { isSupabaseConfigured } from '@/lib/config';
+import { isSupabaseConfigured, supabasePublishableKey, supabaseUrl } from '@/lib/config';
 
 export function createSupabaseBrowserClient() {
   if (!isSupabaseConfigured()) return null;
 
   return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl!,
+    supabasePublishableKey!,
   );
 }

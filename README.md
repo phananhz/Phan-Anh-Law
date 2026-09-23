@@ -26,7 +26,7 @@ Các URL chính:
 4. Chạy phần seed đối tác trong `supabase/seed.sql`. Schema đồng thời tạo bucket Storage công khai `news-media` (JPEG/PNG/WebP/AVIF, tối đa 5 MB) và policy chỉ cho editor/super_admin tải ảnh vào thư mục riêng theo user ID.
 5. Đặt các biến trong `.env.local` hoặc Vercel theo `.env.example`:
    - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or the legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
    - `NEXT_PUBLIC_SITE_URL`
 
 Service-role key không được đưa vào frontend hoặc biến `NEXT_PUBLIC_*`. RLS trong schema giới hạn bài viết/đối tác/tin nhắn theo vai trò; public chỉ được đọc bài đã xuất bản, đối tác đang hoạt động và insert form liên hệ. Nội dung rich-text được lưu dạng JSON đã whitelist node/mark, URL và kiểu ảnh; editor có upload ảnh, định dạng chữ và nút xem trước trước khi xuất bản.
