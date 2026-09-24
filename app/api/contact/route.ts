@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_MESSAGE_MIN_LENGTH } from '@/lib/contact';
 
 const contactSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
@@ -9,7 +10,7 @@ const contactSchema = z.object({
   email: z.string().trim().email().max(180),
   phone: z.string().trim().min(7).max(40),
   practice: z.string().trim().min(2).max(160),
-  message: z.string().trim().min(20).max(5000),
+  message: z.string().trim().min(CONTACT_MESSAGE_MIN_LENGTH).max(CONTACT_MESSAGE_MAX_LENGTH),
   agreePrivacy: z.literal(true),
   website: z.string().optional(),
 });
@@ -48,14 +49,12 @@ export async function POST(request: Request) {
       email: 'Vui lòng nhập email hợp lệ.',
       phone: 'Số điện thoại cần có từ 7 đến 40 ký tự.',
       practice: 'Vui lòng chọn lĩnh vực tư vấn.',
-      message: 'Vui lòng mô tả yêu cầu tư vấn bằng ít nhất 20 ký tự (tối đa 5.000 ký tự).',
+      message: 'Vui lòng mô tả yêu cầu tư vấn bằng ít nhất 20 ký tự (tối đa 20.000 ký tự).',
       agreePrivacy: 'Vui lòng đồng ý với chính sách bảo mật.',
     };
     return NextResponse.json({ error: fieldMessages[field] || 'Vui lòng kiểm tra lại thông tin đã nhập.' }, { status: 400 });
   }
-  if (isRateLimited(rateLimitKey(request, parsed.data.email))) {
-    return NextResponse.json({ error: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.' }, { status: 429 });
-  }
+  if (isRateLimited(rateLimitKey(request, parsed.data.email))) return NextResponse.json({ error: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.' }, { status: 429 });
 
   const supabase = await createSupabaseServerClient();
   if (!supabase) return NextResponse.json({ error: 'Form liên hệ chưa được kết nối với Supabase.' }, { status: 503 });

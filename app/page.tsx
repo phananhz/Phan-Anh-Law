@@ -7,10 +7,10 @@ import PeopleSection from '@/components/home/PeopleSection';
 import ContactCTA from '@/components/home/ContactCTA';
 import LatestNews from '@/components/home/LatestNews';
 import PartnersMarquee from '@/components/home/PartnersMarquee';
-import { getActivePartners } from '@/lib/partners';
+import { getPartnersPresentation } from '@/lib/partners';
 
 export default async function HomePage() {
-  const activePartners = await getActivePartners();
+  const partnersPresentation = await getPartnersPresentation();
   return (
     <main className="min-h-screen">
       {/* SECTION 1 — HERO */}
@@ -38,7 +38,7 @@ export default async function HomePage() {
       <LatestNews />
 
       {/* SECTION 10 — PARTNERS */}
-      <PartnersMarquee partners={activePartners} />
+      <PartnersMarquee partners={partnersPresentation.partners} motionEnabled={partnersPresentation.motionEnabled} />
 
       {/* SECTION 11 — CONTACT CTA */}
       <ContactCTA />

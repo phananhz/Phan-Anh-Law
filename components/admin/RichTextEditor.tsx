@@ -207,7 +207,7 @@ export default function RichTextEditor({
             onChange={(event) => activeEditor.chain().focus().setColor(event.target.value).run()}
           />
         </label>
-        <ToolbarButton label="Ảnh" onClick={() => imageInput.current?.click()}><ImagePlus className="h-4 w-4" /></ToolbarButton>
+        <ToolbarButton label="Chèn ảnh vào nội dung" onClick={() => imageInput.current?.click()}><ImagePlus className="h-4 w-4" /></ToolbarButton>
         <input
           ref={imageInput}
           type="file"

@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, Clock, CheckCircle2, ShieldCheck, ArrowRight } fro
 import { offices } from '@/data/navigation';
 import { practices } from '@/data/practices';
 import Glass from '@/components/ui/Glass';
+import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_MESSAGE_MIN_LENGTH } from '@/lib/contact';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -27,7 +28,7 @@ export default function ContactPage() {
       alert('Vui lòng đồng ý với Chính sách bảo mật trước khi gửi thông tin.');
       return;
     }
-    if (formData.message.trim().length < 20) {
+    if (formData.message.trim().length < CONTACT_MESSAGE_MIN_LENGTH) {
       setSubmitError('Vui lòng mô tả yêu cầu tư vấn bằng ít nhất 20 ký tự.');
       return;
     }
@@ -211,7 +212,7 @@ export default function ContactPage() {
                       rows={5}
                       required
                       minLength={20}
-                      maxLength={5000}
+                      maxLength={CONTACT_MESSAGE_MAX_LENGTH}
                       aria-describedby="message-guidance"
                       value={formData.message}
                       onChange={(e) => {
@@ -221,7 +222,7 @@ export default function ContactPage() {
                       placeholder="Mô tả ngắn gọn về tình trạng hiện tại của doanh nghiệp, mục tiêu dự kiến và các mốc thời gian quan trọng..."
                       className="w-full px-4 py-3 rounded-xl bg-paper-subtle border border-stone-200 text-sm text-stone-900 focus:outline-none focus:border-emerald-brand transition-colors leading-relaxed"
                     />
-                    <p id="message-guidance" className="text-xs text-stone-500">Ít nhất 20 ký tự, tối đa 5.000 ký tự.</p>
+                    <p id="message-guidance" className="text-xs text-stone-500">Ít nhất 20 ký tự, tối đa 20.000 ký tự.</p>
                   </div>
 
                   {/* Checkbox Bảo mật */}

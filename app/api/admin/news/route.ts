@@ -11,7 +11,7 @@ const articleSchema = z.object({
   excerpt: z.string().trim().min(20).max(500),
   body: z.unknown(),
   category: z.string().trim().min(2).max(80),
-  status: z.enum(['draft', 'published']),
+  status: z.enum(['draft', 'published', 'archived']),
   coverImagePath: z.string().trim().max(500).nullable().optional(),
   coverImageAlt: z.string().trim().max(240).optional(),
 });
@@ -23,22 +23,16 @@ function ownsMediaPath(path: string, userId: string) {
 export async function POST(request: Request) {
   const admin = await getCurrentAdmin();
   if (!admin || !canEditNews(admin.role)) return NextResponse.json({ error: 'Không có quyền thực hiện thao tác này.' }, { status: 403 });
-
   const supabase = await createSupabaseServerClient();
   if (!supabase) return NextResponse.json({ error: 'Supabase chưa được cấu hình.' }, { status: 503 });
-
   const parsed = articleSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: 'Dữ liệu bài viết chưa hợp lệ.' }, { status: 400 });
 
   const candidate = Array.isArray(parsed.data.body) ? legacyBodyToDocument(parsed.data.body) : parsed.data.body;
   if (!isSafeArticleDocument(candidate)) return NextResponse.json({ error: 'Nội dung rich-text không hợp lệ.' }, { status: 400 });
   const body = normalizeArticleDocument(candidate);
-  if (parsed.data.coverImagePath && !ownsMediaPath(parsed.data.coverImagePath, admin.id)) {
-    return NextResponse.json({ error: 'Ảnh bìa không thuộc tài khoản hiện tại.' }, { status: 400 });
-  }
-  if (parsed.data.status === 'published' && parsed.data.coverImagePath && !parsed.data.coverImageAlt) {
-    return NextResponse.json({ error: 'Hãy nhập mô tả ảnh bìa trước khi xuất bản.' }, { status: 400 });
-  }
+  if (parsed.data.coverImagePath && !ownsMediaPath(parsed.data.coverImagePath, admin.id)) return NextResponse.json({ error: 'Ảnh bìa không thuộc tài khoản hiện tại.' }, { status: 400 });
+  if (parsed.data.status === 'published' && parsed.data.coverImagePath && !parsed.data.coverImageAlt) return NextResponse.json({ error: 'Hãy nhập mô tả ảnh bìa trước khi xuất bản.' }, { status: 400 });
 
   const now = new Date().toISOString();
   const { data, error } = await supabase.from('articles').insert({
@@ -59,7 +53,6 @@ export async function POST(request: Request) {
   }).select('id').single();
 
   if (error) return NextResponse.json({ error: error.code === '23505' ? 'Slug đã tồn tại.' : 'Không thể lưu bài viết.' }, { status: 400 });
-
   revalidatePath('/');
   revalidatePath('/news');
   revalidatePath('/news/' + parsed.data.slug);

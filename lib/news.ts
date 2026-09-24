@@ -21,10 +21,7 @@ type DatabaseArticle = {
 };
 
 function toNewsArticle(row: DatabaseArticle, coverImageUrl?: string): NewsArticle {
-  const legacyBody = Array.isArray(row.body_json)
-    ? row.body_json.filter((item): item is string => typeof item === 'string')
-    : [];
-
+  const legacyBody = Array.isArray(row.body_json) ? row.body_json.filter((item): item is string => typeof item === 'string') : [];
   return {
     id: row.id,
     slug: row.slug,
@@ -55,12 +52,10 @@ export async function getPublishedNews(): Promise<NewsArticle[]> {
     .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false });
 
-  if (error || !data?.length) return newsArticles;
+  if (error || !data?.length) return [];
 
   return (data as DatabaseArticle[]).map((row) => {
-    const coverImageUrl = row.cover_image_path
-      ? supabase.storage.from('news-media').getPublicUrl(row.cover_image_path).data.publicUrl
-      : undefined;
+    const coverImageUrl = row.cover_image_path ? supabase.storage.from('news-media').getPublicUrl(row.cover_image_path).data.publicUrl : undefined;
     return toNewsArticle(row, coverImageUrl);
   });
 }
