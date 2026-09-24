@@ -33,10 +33,17 @@ export default function QuickContact() {
         <ZaloIcon />
         <span>Zalo</span>
       </Link>
-      <Link href="/contact" aria-label="Liên hệ qua Messenger" title="Messenger" className={buttonClass}>
+      <a
+        href="https://www.facebook.com/PhanAnhLaw.Co"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Liên hệ qua Messenger"
+        title="Messenger"
+        className={buttonClass}
+      >
         <MessengerIcon />
         <span>Messenger</span>
-      </Link>
+      </a>
 
 
     </div>
